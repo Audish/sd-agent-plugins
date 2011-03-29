@@ -8,7 +8,7 @@ assert platform.system() == 'Linux', 'I ought to run in Linux'
 import os
 from subprocess import Popen, PIPE
 
-class netstat(object):
+class Netstat(object):
     def __init__(self, agentConfig, checksLogger, rawConfig):
         self.agentConfig = agentConfig
         self.checksLogger = checksLogger
@@ -29,5 +29,5 @@ class netstat(object):
 if __name__ == '__main__':
     import logging
     logging.basicConfig()
-    plugin = netstat(None, logging, dict(Main=dict()))
+    plugin = Netstat(None, logging, dict(Main=dict()))
     print(plugin.run())
