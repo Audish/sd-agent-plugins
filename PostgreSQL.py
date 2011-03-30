@@ -55,6 +55,9 @@ class PostgreSQL(object):
                 pgStatus = [PostgreSQLStatActivity(*element) for element in cursor.fetchall()]
                 result['connections'] = len(pgStatus)
                 result['slowQueries'] = len(tuple(self.yieldSlowQueries(pgStatus)))
+
+                cursor.execute("select pg_database_size('%s');" % (self.database,))
+                result['dbSize'] = cursor.fetchone()[0]
         return result
 
     def yieldSlowQueries(self, pgStatus):
