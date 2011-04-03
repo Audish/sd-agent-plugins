@@ -43,7 +43,7 @@ class PostgreSQL(BaseConfigurationUser):
 
     def yieldSlowQueries(self, pgStatus):
         for connection in pgStatus:
-            if connection.current_query == '<IDLE>':
+            if '<IDLE>' in connection.current_query:
                 continue
             execution_time = datetime.now(connection.query_start_time.tzinfo) - connection.query_start_time
             if execution_time > SLOW_QUERY_DELTA:
