@@ -41,6 +41,8 @@ class BaseJSONMonitor(BaseConfigurationUser):
     maximumAge = timedelta(hours=2)
     def run(self):
         result = dict(self.defaultValues)
+        if not self.fullyConfigured:
+            return result
         try:
             if datetime.now() - datetime.fromtimestamp(os.stat(self.filename).st_mtime) > self.maximumAge:
                 self.checksLogger.warning(
