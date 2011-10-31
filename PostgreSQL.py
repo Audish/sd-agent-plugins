@@ -15,7 +15,7 @@ from base import BaseConfigurationUser, REQUIRED
 
 SLOW_QUERY_DELTA = timedelta(minutes=5)
 
-PostgreSQLStatActivity = namedtuple('PostgreSQLStatActivity', 'db_oid, name, pid, user_oid, user_name, current_query, query_wait_status, transaction_start_time, query_start_time, process_start_time, client_address, client_port')
+PostgreSQLStatActivity = namedtuple('PostgreSQLStatActivity', 'name, query_start_time, current_query')
 
 class PostgreSQL(BaseConfigurationUser):
     confValues = (
@@ -32,7 +32,7 @@ class PostgreSQL(BaseConfigurationUser):
         result = {}
         with closing(psycopg2.connect(**self.makeConnectionKwargs())) as connection:
             with closing(connection.cursor()) as cursor:
-                cursor.execute('select * from pg_stat_activity;')
+                cursor.execute('select datname, query_start, current_query from pg_stat_activity;')
                 pgStatus = [PostgreSQLStatActivity(*element) for element in cursor.fetchall()]
                 result['connections'] = len(pgStatus)
                 result['slowQueries'] = len(tuple(self.yieldSlowQueries(pgStatus)))
